@@ -31,24 +31,25 @@ Currently the only useful command is the Sera *allow* command which will tempora
 Essentially Sera layers a limited api over your server that can't be targeted by direct attacks, and means you won't need ssh or a vpn to access a server. Conceptually it is similar to salt but uses AWS SQS as transport instead of ZeroMQ. This means you can leverage the scaling and security of the battle AWS SQS at low cost.
 
 Features
---------
+---------
 
- - public key encryption over the ssl transport with pynacl
- - clients are restricted to the available click commands
- - watchers use a restricted AWS keypair that is limited to receiving and sending messages on a queue
- - pluggable transport
+- public key encryption over the ssl transport with pynacl
+- clients are restricted to the available click commands
+- watchers use a restricted AWS keypair that is limited to receiving and sending messages on a queue
+- pluggable transport
 
 Goals
 ------
 
 - wrap salt-call and salt commands
-- a configurable list of commands that a client can invoke
+- a configurable list of commands that clients are allowed to invoke
 - package for apt
-- a configurable list of clients that can issue commands on the watcher
-- optionally use sudo with password instead of root for security in the event of compromised client
+- a configurable list of clients that can invoke commands on the watcher
+- optionally use sudo with password instead of root user on watcher
 - pluggable click commands
 - target groups of watchers with AWS SNS
 - glob '*' targeting of watchers
+- integrate s3 and others for file 'upload' handling
 
 Installation
 -------------
@@ -59,11 +60,19 @@ Security notes
 --------------
 The main known weaknesses are:
 
-- In that event a compromised server AWS keypair can guess the name of other watchers then they can send commands to those watches. This can be mitigated by using difficult to guess watcher/host names.
+- In that event a compromised server AWS keypair can guess the name of other watchers then they can send commands to those watchers. This can be mitigated by using difficult to guess watcher/host names.
 
 - Client and server communicate by public key encryption using the pynacl library. On first contact they swap public keys, which means potentially with a compromised AWS keypair a malicious client could get in first assuming they know the watcher/host name.
 
 - Sera is intended to run as root user so a compromised client or server aws keypair can issue any command to the server.
+
+The main security features are:
+
+- The nacl public encyrption private keys are never transmitted
+- all messages between the client and watcher are encrypted after the initial public key exchange
+- the boto3 library uses verified ssl encryption over the top of the nacl encryption
+- AWS SQS is limited to 256KB message size
+- watcher aws keypair can only receive and send messages to known queues.
 
 
 Credits
