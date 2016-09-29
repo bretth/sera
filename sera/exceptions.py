@@ -1,0 +1,3 @@
+
+class NoOneWatching(Exception):
+    pass

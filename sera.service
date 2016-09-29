@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Sera automation
+After=network.target
+
+[Service]
+ExecStart=path_to_executable
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
