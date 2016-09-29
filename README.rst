@@ -18,25 +18,25 @@ Sera
      :alt: Updates
 
 
-The only secure port is a closed one. Execute click commands on a remote server without requiring a vpn, open inbound ports, or port knocking. This is pre-release software, python3 and currently intended for Ubuntu based servers only.
+The only secure port is a closed one. Execute click commands on a remote server without requiring a vpn, open inbound ports, or port knocking. This is pre-release software, python3 and currently useful for Ubuntu based servers only.
 
 Introduction
 -------------
-Sera is a client server commandline program that allows the client to issue 'click' commands with end-to-end encryption over a transport to a 'watcher' host. Click is a commandline library for python.
+Sera is a client server commandline program that allows the client to invoke 'click' commands with end-to-end encryption over a transport on a 'watcher' host. Click is a commandline library for python.
 
-The Sera 'watcher' polls the transport (currently only AWS SQS) for commands to execute and returns the output.
+For security, rather than listen for commands, the Sera 'watcher' polls the transport (currently only AWS SQS) for commands to execute and returns the output on a sender queue.
 
-Currently the Sera *allow* command will temporarily enable ufw to allow traffic from your current public ip address, but it is intended that Sera leverage saltstack for much more powerful configuration and orchestration.
+Currently the only useful command is the Sera *allow* command which will temporarily enable ufw to allow traffic from your current public ip address, but it is intended that Sera leverage saltstack for much more powerful configuration and orchestration either to control a master or to control masterless minions.
 
-Essentially Sera exposes a limited api to your server that can't be targetted by direct attacks.
+Essentially Sera layers a limited api over your server that can't be targeted by direct attacks, and means you won't need ssh or a vpn to access a server. Conceptually it is similar to salt but uses AWS SQS as transport instead of ZeroMQ. This means you can leverage the scaling and security of the battle AWS SQS at low cost.
 
 Features
 --------
 
- * public key encryption over the ssl transport with pynacl
- * clients are restricted to the available click commands
- * servers use a restricted AWS keypair that is limited to receiving and sending messages on a queue
- * pluggable transport
+ - public key encryption over the ssl transport with pynacl
+ - clients are restricted to the available click commands
+ - watchers use a restricted AWS keypair that is limited to receiving and sending messages on a queue
+ - pluggable transport
 
 Goals
 ------
@@ -47,6 +47,13 @@ Goals
 - a configurable list of clients that can issue commands on the watcher
 - optionally use sudo with password instead of root for security in the event of compromised client
 - pluggable click commands
+- target groups of watchers with AWS SNS
+- glob '*' targeting of watchers
+
+Installation
+-------------
+
+To come.
 
 Security notes
 --------------
