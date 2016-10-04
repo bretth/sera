@@ -1,7 +1,7 @@
 import os
 # import pytest
 
-from sera.utils import keygen, encrypt, decrypt
+from sera.utils import keygen, encrypt, decrypt, get_default_envpath
 from dotenv import get_key
 
 SECRET_KEY1 = 'mWxBUK-aDh6qZRhdFROhTyiQVdk2pZwqwq-hq4-5elw='
@@ -30,3 +30,8 @@ def test_encrypt_decrypt():
     assert msg
     msg2 = decrypt(msg, PUBLIC_KEY2, SECRET_KEY1)
     assert msg2 == 'test'
+
+
+def test_get_default_env():
+    path = get_default_envpath()
+    assert path

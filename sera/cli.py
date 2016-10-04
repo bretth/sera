@@ -10,7 +10,7 @@ import requests
 from dotenv import load_dotenv, find_dotenv
 
 from .sera import get_client, Host, run, remote
-from .utils import keygen as _keygen, get_watcher_key, set_watcher_key
+from .utils import keygen as _keygen, get_watcher_key, set_watcher_key, get_default_envpath
 
 logger = logging.getLogger(__name__)
 
@@ -56,12 +56,11 @@ def main(ctx, env, timeout, known, debug, verbose, watcher, local):
         handler = logging.StreamHandler()
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-    try:
-        envpath = env or find_dotenv()
-    except IOError:
-        envpath = ''
+    # set some globals
+    ctx.obj = {'local': local, 'timeout': timeout, 'verbose': verbose}
+    envpath = get_default_envpath(env)
     if not envpath and verbose:
-        click.echo('Using provider cli configuration (if defined)')
+        click.echo('Using provider credentials (if defined)')
     else:
         if verbose:
             click.echo('Loading %s' % envpath)
@@ -71,8 +70,7 @@ def main(ctx, env, timeout, known, debug, verbose, watcher, local):
         public_key = _keygen(env, write=True)[0]
     else:
         public_key = getenv('SERA_PUBLIC_KEY')
-    # set some globals
-    ctx.obj = {'local': local, 'timeout': timeout, 'verbose': verbose}
+
     if verbose and getenv('SERA_REGION'):
         click.echo('Using region %s' % getenv('SERA_REGION'))
     namespace = getenv('SERA_NAMESPACE', 'Sera')

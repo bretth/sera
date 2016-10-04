@@ -10,6 +10,15 @@ from nacl.encoding import URLSafeBase64Encoder
 from nacl.utils import random
 
 
+def get_default_envpath(env=None):
+    envpath = env
+    if not envpath:
+        envpath = Path.home()
+        if envpath.exists():
+            envpath = str(envpath)
+    return envpath
+
+
 def get_watcher_key(name, path=None):
     if not path:
         path = Path.home() / '.sera_known_watchers'
