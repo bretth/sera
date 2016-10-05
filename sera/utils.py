@@ -11,12 +11,12 @@ from nacl.utils import random
 
 
 def get_default_envpath(env=None):
-    envpath = env
-    if not envpath:
-        envpath = Path.home()
-        if envpath.exists():
-            envpath = str(envpath)
-    return envpath
+    if not env:
+        env = Path.home() / '.env'
+        if env.exists():
+            return str(env)
+        else:
+            return None
 
 
 def get_watcher_key(name, path=None):

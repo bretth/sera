@@ -3,6 +3,7 @@ import os
 
 from sera.utils import keygen, encrypt, decrypt, get_default_envpath
 from dotenv import get_key
+from pathlib import Path
 
 SECRET_KEY1 = 'mWxBUK-aDh6qZRhdFROhTyiQVdk2pZwqwq-hq4-5elw='
 PUBLIC_KEY1 = 'b1ZfANMSxRJwqtkJK4DwLoL7wCl8-Rjl8aPEc-co4TU='
@@ -32,6 +33,6 @@ def test_encrypt_decrypt():
     assert msg2 == 'test'
 
 
-def test_get_default_env():
+def test_get_default_env(dotenv_file):
     path = get_default_envpath()
-    assert path
+    assert path == str(dotenv_file)
