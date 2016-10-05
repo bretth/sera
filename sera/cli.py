@@ -201,7 +201,7 @@ def watch(ctx):
     host = None
     while not host:
         host = Host.get(name)
-        time.sleep(5)
+        time.sleep(int(getenv('SERA_MAX_DELAY', '5')))
     start = time.time()
     while True:
         cmd = host.receive(timeout=timeout)
