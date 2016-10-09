@@ -13,11 +13,17 @@ from ..expiringdict import ExpiringDict
 logger = logging.getLogger(__name__)
 
 ReceiveMessageWaitTimeSeconds = 0  # let the clients set wait time instead of the queue
-MessageRetentionPeriod = 60
-VisibilityTimeout = MessageRetentionPeriod * 2  # ensure the message is only seen once
+MessageRetentionPeriod = 60  # shortest period possible on aws
+VisibilityTimeout = MessageRetentionPeriod+60  # ensure the message is only seen once
 
 url_pattern = re.compile('[^a-zA-Z0-9_-]+')
 ENDPOINT_CACHE = None
+
+# AWS SQS guarantees at least once but in practice may deliver twice
+# regardless of retention period and visibility timeout so we want to cache received
+# messageids to ensure we don't duplicate commands.
+MSG_CACHE = ExpiringDict(VisibilityTimeout+60)
+
 Q_NAMESPACE = 'Sera'
 USERNAME = 'SeraWatcher'
 GROUP = 'SeraWatchers'
@@ -186,16 +192,18 @@ class AWSProvider(object):
             ReceiptHandle=uid)
 
     def receive_message(self, timeout=0):
+        global MSG_CACHE
         if timeout > 20 or timeout < 0:  # aws max long poll
             timeout = 20
-
-        msg = self.sqs.receive_message(
-            QueueUrl=self.endpoint.url,
-            AttributeNames=['SentTimestamp'],
-            MessageAttributeNames=['Sender', 'Encrypted'],
-            WaitTimeSeconds=timeout,
-            MaxNumberOfMessages=1).get('Messages', [None])[0]
-        if msg:
+        msg = None
+        while not msg or msg.get('MessageId') in MSG_CACHE:
+            msg = self.sqs.receive_message(
+                QueueUrl=self.endpoint.url,
+                AttributeNames=['SentTimestamp'],
+                MessageAttributeNames=['Sender', 'Encrypted'],
+                WaitTimeSeconds=timeout,
+                MaxNumberOfMessages=1).get('Messages', [None])[0]
+        if msg and msg['MessageId'] not in MSG_CACHE:
             message = Message(
                 uid=msg['ReceiptHandle'],
                 timestamp=msg['Attributes']['SentTimestamp'],
