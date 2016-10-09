@@ -34,9 +34,10 @@ def test_encrypt_decrypt():
     assert msg2 == 'test'
 
 
-def test_get_default_env(dotenv_file):
+def test_get_default_envpath(dotenv_file):
     path = get_default_envpath()
     assert path == str(dotenv_file)
+
 
 def test_get_allowed_clients(allowed_clients_file):
     clients = get_allowed_clients()
