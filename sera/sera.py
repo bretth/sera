@@ -7,6 +7,8 @@ import json
 import importlib
 import time
 
+from nacl.exceptions import CryptoError
+
 from .utils import encrypt, decrypt
 
 logger = logging.getLogger(__name__)
@@ -171,8 +173,15 @@ class Host(BaseEndpoint):
             body = msg.body
             senders_key = None
         if body == 'decrypt':
-            kwargs = json.loads(
-                decrypt(msg.encrypted, senders_key, getenv('SERA_PRIVATE_KEY')))
+            try:
+                kwargs = json.loads(
+                    decrypt(msg.encrypted, senders_key, getenv('SERA_PRIVATE_KEY')))
+            # if the message is unencrypted it will raise a ValueError trying to extract a NONCE
+            except (ValueError, CryptoError) as err:
+                logger.warning('Failed to decrypt msg')
+                logger.warning(msg)
+                logger.warning(str(err))
+
             logger.debug('RemoteCommand(host=%s, public_key=%s, name=%s' %
                 (msg.sender, str(senders_key), kwargs.get('name')))
             return RemoteCommand(host=msg.sender, public_key=senders_key, **kwargs)
