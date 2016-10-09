@@ -1,7 +1,8 @@
 import os
+
 # import pytest
 
-from sera.utils import keygen, encrypt, decrypt, get_default_envpath
+from sera.utils import keygen, encrypt, decrypt, get_default_envpath, get_allowed_clients
 from dotenv import get_key
 from pathlib import Path
 
@@ -36,3 +37,7 @@ def test_encrypt_decrypt():
 def test_get_default_env(dotenv_file):
     path = get_default_envpath()
     assert path == str(dotenv_file)
+
+def test_get_allowed_clients(allowed_clients_file):
+    clients = get_allowed_clients()
+    assert clients == ['123', '456']

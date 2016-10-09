@@ -10,7 +10,8 @@ import requests
 from dotenv import load_dotenv, find_dotenv
 
 from .sera import get_client, Host, run, remote
-from .utils import keygen as _keygen, get_watcher_key, set_watcher_key, get_default_envpath
+from .utils import keygen as _keygen
+from .utils import get_watcher_key, set_watcher_key, get_default_envpath, get_allowed_clients
 
 logger = logging.getLogger(__name__)
 
@@ -190,11 +191,13 @@ def create_provider_keys(ctx):
 
 @main.command()
 @click.pass_context
-def watch(ctx):
+@click.option('--client', '-c', help="Allowed client")
+def watch(ctx, client):
     """Watch for requests on current hostname or <name>"""
     verbose = ctx.obj.get('verbose')
     ctx.obj['host'] = name = ctx.parent.params['watcher'] or \
         getenv('SERA_DEFAULT_WATCHER', '') or gethostname()
+    allowed_clients = get_allowed_clients(client)
     timeout = ctx.obj['timeout']
     ctx.obj['local'] = True
     click.echo('Watching %s' % name)
@@ -205,11 +208,15 @@ def watch(ctx):
     start = time.time()
     while True:
         cmd = host.receive(timeout=timeout)
-        if cmd and cmd.name == 'public_key':
+        if cmd and cmd.public_key not in allowed_clients:
+            if verbose:
+                click.echo("Client public key '%s' not allowed" % str(cmd.public_key))
+                click.echo("Ignoring command '%s'" % str(cmd.name))
+        elif cmd and cmd.name == 'public_key':
             if verbose:
                 click.echo('Sending public key to %s' % cmd.host)
             host.send(cmd.host, 'public_key %s' % getenv('SERA_PUBLIC_KEY'), await_response=False)
-        elif cmd and cmd.name:
+        elif cmd and cmd.public_key in allowed_clients and cmd.name:
             if verbose:
                 click.echo('Received cmd %s' % str(cmd.name))
             subcommand = main.get_command(ctx, cmd.name)
