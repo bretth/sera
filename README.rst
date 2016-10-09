@@ -35,7 +35,7 @@ Features
 
 - public key encryption over the ssl transport with pynacl
 - clients are restricted to the available click commands
-- watchers use a restricted AWS keypair that is limited to receiving and sending messages on a queue
+- watchers use a restricted AWS keypair that is limited to receiving and sending messages on a knowable queue
 - pluggable transport
 
 Goals
@@ -60,19 +60,16 @@ Security notes
 --------------
 The main known weaknesses are:
 
-- In that event a compromised server AWS keypair can guess the name of other watchers then they can send commands to those watchers. This can be mitigated by using difficult to guess watcher/host names.
-
-- Client and server communicate by public key encryption using the pynacl library. On first contact they swap public keys, which means potentially with a compromised AWS keypair a malicious client could get in first assuming they know the watcher/host name.
-
-- Sera is intended to run as root user so a compromised client or server aws keypair can issue any command to the server.
+- Sera is intended to run as root user so a compromised client can issue any command to the watcher.
 
 The main security features are:
 
-- The nacl public encyrption private keys are never transmitted
+- The nacl public encryption private keys are never transmitted
 - all messages between the client and watcher are encrypted after the initial public key exchange
+- watchers can only receive commands from known clients
 - the boto3 library uses verified ssl encryption over the top of the nacl encryption
 - AWS SQS is limited to 256KB message size
-- watcher aws keypair can only receive and send messages to known queues.
+- watcher aws keypair can only receive and send messages to knowable queues.
 
 
 Credits
