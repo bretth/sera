@@ -147,6 +147,8 @@ class Host(BaseEndpoint):
         return
 
     def receive(self, timeout=-1):
+        delay = 0
+        max_delay = int(getenv('SERA_MAX_DELAY', '20'))
         start = time.time()
         while True:
             msg = self.client.receive_message(timeout)
@@ -155,6 +157,14 @@ class Host(BaseEndpoint):
             duration = time.time() - start
             if timeout > -1 and duration > timeout:
                 return
+
+            # limit the polling on queues to an acceptable threshold
+            time.sleep(delay)
+            if cmd:
+                delay = 0
+            elif delay < max_delay:
+                delay += 1
+
         if ' ' in msg.body:
             body, senders_key = json.loads(msg.body).split(' ')
         else:

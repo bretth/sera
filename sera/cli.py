@@ -201,10 +201,17 @@ def watch(ctx, client):
     timeout = ctx.obj['timeout']
     ctx.obj['local'] = True
     click.echo('Watching %s' % name)
+
+    # wait for the host queue to be created by the client
     host = None
+    delay = 0
+    max_delay = int(getenv('SERA_MAX_DELAY', '20'))
     while not host:
         host = Host.get(name)
-        time.sleep(int(getenv('SERA_MAX_DELAY', '5')))
+        time.sleep(delay)
+        if delay < max_delay:
+            delay += 1
+
     start = time.time()
     while True:
         cmd = host.receive(timeout=timeout)
