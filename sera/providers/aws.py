@@ -3,12 +3,14 @@ import logging
 import re
 import os
 from datetime import datetime
+import time
 
 from dateutil.tz import tzlocal
 import boto3
 from botocore.exceptions import ClientError
 
 from ..expiringdict import ExpiringDict
+from ..sera import Host
 
 logger = logging.getLogger(__name__)
 
@@ -195,6 +197,7 @@ class AWSProvider(object):
         if timeout > 20 or timeout < 0:  # aws max long poll
             timeout = 20
         msg = None
+        start = time.time()
         while not msg or msg.get('MessageId') in MSG_CACHE:
             msg = self.sqs.receive_message(
                 QueueUrl=self.endpoint.url,
@@ -202,6 +205,9 @@ class AWSProvider(object):
                 MessageAttributeNames=['Sender', 'Encrypted'],
                 WaitTimeSeconds=timeout,
                 MaxNumberOfMessages=1).get('Messages', [None])[0]
+            duration = time.time() - start
+            if duration > timeout:
+                break
         if msg and msg['MessageId'] not in MSG_CACHE:
             message = Message(
                 uid=msg['ReceiptHandle'],
@@ -213,8 +219,7 @@ class AWSProvider(object):
         return
 
     def send_message(self, name, msg, attributes={}):
-        to = self.endpoint.get(
-            name, create=self.endpoint.creator)
+        to = Host.get(name, create=self.endpoint.creator)
         msg_attrs = {}
         msg_attrs['Sender'] = self.endpoint.uid
         msg_attrs.update(attributes)

@@ -161,9 +161,7 @@ class Host(BaseEndpoint):
 
             # limit the polling on queues to an acceptable threshold
             time.sleep(delay)
-            if cmd:
-                delay = 0
-            elif delay < max_delay:
+            if delay < max_delay:
                 delay += 1
 
         if ' ' in msg.body:
@@ -181,9 +179,11 @@ class Host(BaseEndpoint):
                 logger.warning(msg)
                 logger.warning(str(err))
 
-            logger.debug('RemoteCommand(host=%s, public_key=%s, name=%s' %
+            logger.debug(
+                'RemoteCommand(host=%s, public_key=%s, name=%s' %
                 (msg.sender, str(senders_key), kwargs.get('name')))
             return RemoteCommand(host=msg.sender, public_key=senders_key, **kwargs)
-        logger.debug('RemoteCommand(host=%s, public_key=%s, name=%s, ...)' %
-                (msg.sender, str(senders_key), body))
+        logger.debug(
+            'RemoteCommand(host=%s, public_key=%s, name=%s, ...)' %
+            (msg.sender, str(senders_key), body))
         return RemoteCommand(host=msg.sender, name=body, public_key=senders_key)
