@@ -2,12 +2,11 @@
 import logging
 from os import getenv
 from socket import gethostname
-import sys
 import time
 
 import click
 import requests
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 from .sera import get_client, Host, run, remote
 from .utils import keygen as _keygen
@@ -23,6 +22,7 @@ def mprint(ctx, out):
     if out.stderr:
         click.echo(out.stderr)
     return out
+
 
 @click.group()
 @click.option(
@@ -97,13 +97,14 @@ def main(ctx, env, timeout, known, debug, verbose, watcher, local):
         if watcher_key:
             set_watcher_key(watcher.name, watcher_key, known_path)
         else:
-            raise click.ClickException('No public key received from %s' % watcher.uid)
+            raise click.ClickException(
+                'No public key received from %s' % watcher.uid)
     ctx.obj['watcher_key'] = watcher_key
 
 
 @main.command(
     context_settings=dict(
-    ignore_unknown_options=True))
+        ignore_unknown_options=True))
 @click.pass_context
 @click.argument('args', nargs=-1, type=click.UNPROCESSED)
 def echo(ctx, args):
@@ -124,7 +125,8 @@ def allow(ctx, from_ip):
 
     verbose = ctx.obj.get('verbose')
     if not from_ip:
-        ctx.params['from_ip'] = from_ip = requests.get('http://ipinfo.io').json().get('ip')
+        ctx.params['from_ip'] = from_ip = requests.get(
+            'http://ipinfo.io').json().get('ip')
     if verbose:
         click.echo('allow from_ip %s' % from_ip)
     args = ['allow', 'from', from_ip]
@@ -147,7 +149,8 @@ def disallow(ctx, delay, from_ip):
 
     verbose = ctx.obj.get('verbose')
     if not from_ip:
-        ctx.params['from_ip'] = from_ip = requests.get('http://ipinfo.io').json().get('ip')
+        ctx.params['from_ip'] = from_ip = requests.get(
+            'http://ipinfo.io').json().get('ip')
     if verbose:
         click.echo('disallow from_ip %s' % from_ip)
     args = ['delete', 'allow', 'from', from_ip]
@@ -217,12 +220,14 @@ def watch(ctx, client):
         cmd = host.receive(timeout=timeout)
         if cmd and cmd.public_key not in allowed_clients:
             if verbose:
-                click.echo("Client public key '%s' not allowed" % str(cmd.public_key))
+                click.echo("Client public key '%s' not allowed" %
+                           str(cmd.public_key))
                 click.echo("Ignoring command '%s'" % str(cmd.name))
         elif cmd and cmd.name == 'public_key':
             if verbose:
                 click.echo('Sending public key to %s' % cmd.host)
-            host.send(cmd.host, 'public_key %s' % getenv('SERA_PUBLIC_KEY'), await_response=False)
+            host.send(cmd.host, 'public_key %s' % getenv(
+                'SERA_PUBLIC_KEY'), await_response=False)
         elif cmd and cmd.public_key in allowed_clients and cmd.name:
             if verbose:
                 click.echo('Received cmd %s' % str(cmd.name))
@@ -240,4 +245,3 @@ def watch(ctx, client):
         duration = time.time() - start
         if timeout > -1 and duration > timeout:
             return
-

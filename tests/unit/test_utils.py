@@ -4,7 +4,6 @@ import os
 
 from sera.utils import keygen, encrypt, decrypt, get_default_envpath, get_allowed_clients
 from dotenv import get_key
-from pathlib import Path
 
 SECRET_KEY1 = 'mWxBUK-aDh6qZRhdFROhTyiQVdk2pZwqwq-hq4-5elw='
 PUBLIC_KEY1 = 'b1ZfANMSxRJwqtkJK4DwLoL7wCl8-Rjl8aPEc-co4TU='

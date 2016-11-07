@@ -1,7 +1,6 @@
 import logging
-from collections import namedtuple
-from os import getenv, linesep
 import re
+from os import getenv
 from subprocess import run as _run, PIPE, CompletedProcess
 import json
 import importlib
