@@ -35,7 +35,7 @@ Features
 
 - public key encryption over the ssl transport with pynacl
 - clients are restricted to the available click commands
-- watchers use a restricted AWS keypair that is limited to receiving and sending messages on a knowable queue
+- watchers use a restricted AWS keypair that is limited to receiving and sending messages on known or guessable queue names
 - pluggable transport
 
 Goals
@@ -69,7 +69,7 @@ The main security features are:
 - watchers can only receive commands from known clients
 - the boto3 library uses verified ssl encryption over the top of the nacl encryption
 - AWS SQS is limited to 256KB message size
-- watcher aws keypair can only receive and send messages to knowable queues.
+- watcher aws keypair cannot delete messages, list or create queues.
 
 
 Credits
