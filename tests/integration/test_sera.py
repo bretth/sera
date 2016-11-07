@@ -1,9 +1,7 @@
 # test_sera
-import json
 
 from os import getenv
 from sera.sera import Host
-from sera.utils import decrypt
 
 
 class TestHost(object):
