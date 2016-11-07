@@ -21,12 +21,12 @@ def sqs():
 
 @pytest.fixture
 def a_name():
-    return 'test-' + str(uuid4())
+    return '-'.join(['test', str(uuid4())])
 
 
 @pytest.fixture(scope='module')
 def client():
-    return AWSProvider()
+    return AWSProvider(namespace='')
 
 
 @pytest.fixture

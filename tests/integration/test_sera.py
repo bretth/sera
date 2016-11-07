@@ -11,7 +11,7 @@ class TestHost(object):
 
     def test_get_a_queue(self, endpoint):
         name, url = endpoint
-        host = Host.get(name)
+        host = Host.get(name, namespace='')
         assert host.url == url
 
     def test_get_create_a_queue(self, endpoint_name):

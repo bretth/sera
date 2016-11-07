@@ -76,21 +76,21 @@ class AWSProvider(object):
             region='',
             access_key='',
             secret_access_key='',
+            namespace=None,
             **kwargs):
         global ENDPOINT_CACHE
         if not ENDPOINT_CACHE:
             ENDPOINT_CACHE = ExpiringDict(int(os.getenv('SERA_ENDPOINT_TTL', 60*60)))
         self.cache = ENDPOINT_CACHE
         self.name = 'AWS'
-        self.endpoint = kwargs.get('endpoint')
+        self.endpoint = kwargs.get('endpoint')  # sera.Host
         self.sqs = boto3.client(
             'sqs',
             region_name=region or os.getenv('SERA_REGION'),
             aws_access_key_id=access_key or os.getenv('SERA_ACCESS_KEY'),
             aws_secret_access_key=secret_access_key or os.getenv('SERA_SECRET_KEY'))
-        namespace = os.getenv('SERA_NAMESPACE')
         if namespace is None:  # allow '' to be set as a valid namespace
-            namespace = 'Sera'
+            namespace = os.getenv('SERA_NAMESPACE', 'Sera')
         kwargs.setdefault('namespace', namespace)
         kwargs.setdefault('ReceiveMessageWaitTimeSeconds', ReceiveMessageWaitTimeSeconds)
         kwargs.setdefault('MessageRetentionPeriod', MessageRetentionPeriod)
@@ -167,7 +167,6 @@ class AWSProvider(object):
 
     def delete_endpoint(self, url):
         self.sqs.delete_queue(QueueUrl=url)
-
 
     def get_endpoint(self, name):
         queue_name = self._sanitize(name)

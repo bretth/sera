@@ -105,8 +105,8 @@ class BaseEndpoint(object):
 class Host(BaseEndpoint):
 
     @classmethod
-    def get(cls, name, create=False):
-        client = get_client()()
+    def get(cls, name, create=False, namespace=None):
+        client = get_client()(namespace=namespace)
         url = client.get_endpoint(name)
         if not url and create:
             url = client.create_endpoint(name)
