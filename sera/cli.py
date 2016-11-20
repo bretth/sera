@@ -9,6 +9,7 @@ import requests
 from dotenv import load_dotenv
 
 from .sera import get_client, Host, run, remote
+from .settings import service_template
 from .utils import keygen as _keygen
 from .utils import get_watcher_key, set_watcher_key, get_default_envpath, get_allowed_clients
 
@@ -245,3 +246,23 @@ def watch(ctx, client):
         duration = time.time() - start
         if timeout > -1 and duration > timeout:
             return
+
+
+@main.group('install')
+@click.pass_context
+def install(ctx):
+    """install [service|key] [client_key]"""
+
+
+@install.command()
+@click.pass_context
+@click.option('--path', '-p', help="Path to installed file")
+def service(ctx, path):
+    """Install systemd service"""
+    path = path or '/etc/systemd/system/sera.service'
+    if ctx.obj['verbose']:
+        click.echo('Installing service at %s' % path)
+        output = service_template.substitute(executable=shutil.which('sera'))
+        with open(path, 'w') as file:
+            file.write(output)
+
