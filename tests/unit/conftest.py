@@ -1,4 +1,3 @@
-from unittest.mock import mock_open
 import pytest
 from pathlib import Path, PosixPath
 
@@ -19,7 +18,6 @@ def allowed_clients_file(monkeypatch):
     with open(str(tmpclients), 'w') as f:
         f.write('123\n')
         f.write('456\n')
-    monkeypatch.setattr("pathlib.Path.home", lambda: PosixPath('/tmp'))
-    yield
+    yield tmpclients
     tmpclients.unlink
 

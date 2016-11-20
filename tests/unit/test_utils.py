@@ -39,5 +39,5 @@ def test_get_default_envpath(dotenv_file):
 
 
 def test_get_allowed_clients(allowed_clients_file):
-    clients = get_allowed_clients()
+    clients = get_allowed_clients(allowed_clients_file)
     assert clients == ['123', '456']
