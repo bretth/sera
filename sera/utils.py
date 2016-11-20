@@ -11,6 +11,7 @@ from nacl.utils import random
 
 ALLOWED_CLIENTS = []
 
+
 def get_default_envpath(env=None):
     if not env:
         env = Path.home() / '.env'
@@ -20,22 +21,19 @@ def get_default_envpath(env=None):
             return None
 
 
-def get_allowed_clients(client=None):
+def get_allowed_clients(path, client=None):
     global ALLOWED_CLIENTS
     if client:
         return [client]
     elif ALLOWED_CLIENTS:
         return ALLOWED_CLIENTS
-    clients = Path.home() / '.allowed_sera_clients'
-    if clients.exists():
-        with open(str(clients)) as file:
+    if path.exists():
+        with path.open() as file:
             ALLOWED_CLIENTS = [line.rstrip('\n') for line in file.readlines() if line.rstrip('\n')]
     return ALLOWED_CLIENTS
 
 
-def get_watcher_key(name, path=None):
-    if not path:
-        path = Path.home() / '.sera_known_watchers'
+def get_watcher_key(path, name):
     if not path.exists():
         path.touch(mode=0o644)
         return
@@ -43,9 +41,7 @@ def get_watcher_key(name, path=None):
     return dotenv_as_dict.get(name)
 
 
-def set_watcher_key(name, watcher_key, path=None):
-    if not path:
-        path = Path.home() / '.sera_known_watchers'
+def set_watcher_key(path, name, watcher_key):
     if not path.exists():
         path.touch(mode=0o644)
     return set_key(str(path), name, watcher_key, quote_mode="auto")[0]
@@ -101,7 +97,5 @@ def decrypt(msg, sender_key, private_key='', encoding='utf-8'):
     pkey = PublicKey(sender_key, URLSafeBase64Encoder)
     box = Box(skey, pkey)
     return box.decrypt(msg).decode('utf-8')
-
-
 
 

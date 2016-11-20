@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 from os import getenv
+from pathlib import Path
+import shutil
 from socket import gethostname
 import time
 
@@ -31,16 +33,12 @@ def mprint(ctx, out):
     type=click.Path(exists=True, dir_okay=False, resolve_path=True),
     help='Path to environment variables file')
 @click.option('--timeout', '-t', type=int, default=-1)
-@click.option(
-    '--known', '-k',
-    type=click.Path(exists=True, dir_okay=False, resolve_path=True),
-    help='Path to known watchers file')
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--verbose', '-v', is_flag=True)
 @click.option('--watcher', '-w')
 @click.option('--local', '-l', is_flag=True)
 @click.pass_context
-def main(ctx, env, timeout, known, debug, verbose, watcher, local):
+def main(ctx, env, timeout, debug, verbose, watcher, local):
     """
     With OPTIONS send COMMAND with ARGS to target WATCHER
 
@@ -59,7 +57,15 @@ def main(ctx, env, timeout, known, debug, verbose, watcher, local):
         handler.setFormatter(formatter)
         logger.addHandler(handler)
     # set some globals
-    ctx.obj = {'local': local, 'timeout': timeout, 'verbose': verbose}
+    sera_path = Path.home() / '.sera'
+    if not sera_path.exists():
+        sera_path.mkdir()
+    ctx.obj = {
+        'local': local,
+        'timeout': timeout,
+        'verbose': verbose,
+        'known_clients': sera_path / 'known_clients',
+        'known_watchers': sera_path / 'known_watchers'}
     envpath = get_default_envpath(env)
     if not envpath and verbose:
         click.echo('Using provider credentials (if defined)')
@@ -78,7 +84,7 @@ def main(ctx, env, timeout, known, debug, verbose, watcher, local):
     namespace = getenv('SERA_NAMESPACE', 'Sera')
     if verbose and namespace != 'Sera':
         click.echo('Using namespace "%s"' % namespace)
-    if ctx.invoked_subcommand in ['watch', 'create_provider_keys'] or local:
+    if ctx.invoked_subcommand in ['watch', 'create_provider_keys', 'install'] or local:
         return
 
     # master related logic
@@ -89,14 +95,13 @@ def main(ctx, env, timeout, known, debug, verbose, watcher, local):
     master = Host.get(public_key.replace('=', ''), create=True)
     ctx.obj['master'] = master
     ctx.obj['watcher'] = watcher
-    known_path = known or getenv('SERA_KNOWN_WATCHERS')
-    watcher_key = get_watcher_key(watcher.name, known_path)
+    watcher_key = get_watcher_key(ctx.obj['known_watchers'], watcher.name)
     if not watcher_key:
         click.echo('Exchanging public keys with %s' % watcher.uid)
         logging.debug(watcher.name)
         watcher_key = master.exchange_keys(watcher.name)
         if watcher_key:
-            set_watcher_key(watcher.name, watcher_key, known_path)
+            set_watcher_key(ctx.obj['known_watchers'], watcher.name, watcher_key)
         else:
             raise click.ClickException(
                 'No public key received from %s' % watcher.uid)
@@ -195,13 +200,13 @@ def create_provider_keys(ctx):
 
 @main.command()
 @click.pass_context
-@click.option('--client', '-c', help="Allowed client")
+@click.option('--client', '-c', help="Allowed client public key")
 def watch(ctx, client):
     """Watch for requests on current hostname or <name>"""
     verbose = ctx.obj.get('verbose')
     ctx.obj['host'] = name = ctx.parent.params['watcher'] or \
         getenv('SERA_DEFAULT_WATCHER', '') or gethostname()
-    allowed_clients = get_allowed_clients(client)
+    allowed_clients = get_allowed_clients(ctx.obj['known_clients'], client)
     timeout = ctx.obj['timeout']
     ctx.obj['local'] = True
     click.echo('Watching %s' % name)
