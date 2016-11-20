@@ -271,3 +271,13 @@ def service(ctx, path):
         with open(path, 'w') as file:
             file.write(output)
 
+
+@install.command()
+@click.pass_context
+@click.argument('client_key')
+def key(ctx, client_key):
+    """Install client_key in known_clients"""
+    clients = get_allowed_clients(ctx.obj['known_clients'])
+    if client_key not in clients:
+        with ctx.obj['known_clients'].open(mode='w+') as file:
+            file.writelines([client_key])
