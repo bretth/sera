@@ -54,7 +54,10 @@ Goals
 Installation
 -------------
 
-To come.
+apt install build-essential
+apt install python3-pip
+apt install libffi-dev
+pip3 install git+https://github.com/bretth/sera#egg=sera
 
 Security notes
 --------------
