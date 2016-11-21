@@ -67,8 +67,9 @@ def main(ctx, env, timeout, debug, verbose, watcher, local):
         'known_clients': sera_path / 'known_clients',
         'known_watchers': sera_path / 'known_watchers'}
     envpath = get_default_envpath(env)
-    if not envpath and verbose:
-        click.echo('Using provider credentials (if defined)')
+    if not envpath:
+        if verbose:
+            click.echo('Using provider credentials (if defined)')
     else:
         if verbose:
             click.echo('Loading %s' % envpath)
