@@ -75,7 +75,8 @@ def main(ctx, env, timeout, debug, verbose, watcher, local):
             click.echo('Loading %s' % envpath)
         load_dotenv(envpath)
     if not getenv('SERA_PRIVATE_KEY'):
-        click.echo('Generating encryption keypair')
+        if verbose:
+            click.echo('Generating encryption keypair')
         public_key = _keygen(env, write=True)[0]
     else:
         public_key = getenv('SERA_PUBLIC_KEY')
@@ -268,9 +269,9 @@ def service(ctx, path):
     path = path or '/etc/systemd/system/sera.service'
     if ctx.obj['verbose']:
         click.echo('Installing service at %s' % path)
-        output = service_template.substitute(executable=shutil.which('sera'))
-        with open(path, 'w') as file:
-            file.write(output)
+    output = service_template.substitute(executable=shutil.which('sera'))
+    with open(path, 'w') as file:
+        file.write(output)
 
 
 @install.command()
