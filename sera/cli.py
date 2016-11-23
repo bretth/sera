@@ -79,7 +79,7 @@ def main(ctx, timeout, debug, verbosity, watcher, local):
     watcher = Host.get(watcher, create=True)
 
     # use the masters public key as its name
-    master = Host.get(public_key.replace('=', ''), create=True)
+    master = Host.get(getenv('SERA_CLIENT_PUBLIC_KEY').replace('=', ''), create=True)
     ctx.obj['master'] = master
     ctx.obj['watcher'] = watcher
     watcher_key = get_watcher_key(ctx.obj['known_watchers'], watcher.name)
@@ -216,17 +216,17 @@ def watch(ctx, client):
     while True:
         cmd = host.receive(timeout=timeout)
         if cmd and cmd.public_key not in allowed_clients:
-            if not verbosity:
+            if verbosity:
                 click.echo("Client public key '%s' not allowed" %
                            str(cmd.public_key))
                 click.echo("Ignoring command '%s'" % str(cmd.name))
         elif cmd and cmd.name == 'public_key':
-            if not verbosity:
+            if verbosity:
                 click.echo('Sending public key to %s' % cmd.host)
             host.send(cmd.host, 'public_key %s' % getenv(
                 'SERA_CLIENT_PUBLIC_KEY'), await_response=False)
         elif cmd and cmd.public_key in allowed_clients and cmd.name:
-            if not verbosity:
+            if verbosity:
                 click.echo('Received cmd %s' % str(cmd.name))
             subcommand = main.get_command(ctx, cmd.name)
             out = ctx.invoke(subcommand, **cmd.params)
