@@ -12,7 +12,7 @@ from .sera import get_client, Host, run, remote
 from .settings import service_template
 from .utils import keygen as _keygen
 from .utils import (
-    get_watcher_key, set_env_key,
+    get_watcher_key, set_env_key, get_default_user,
     get_allowed_clients, configure_path, loadenv, configure_logging)
 
 
@@ -253,7 +253,7 @@ def install(ctx):
 @install.command()
 @click.pass_context
 @click.option('--path', '-p', help="Path to installed file")
-@click.option('--user', '-u', default="sera", help="User to run as")
+@click.option('--user', '-u', default=get_default_user, help="User to run as")
 def service(ctx, path, user):
     """Install systemd service"""
     path = path or '/etc/systemd/system/sera.service'

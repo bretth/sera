@@ -16,6 +16,13 @@ from nacl.utils import random
 ALLOWED_CLIENTS = []
 
 
+def get_default_user():
+    home = Path.home()
+    if home.exists():
+        return getpwuid(home.stat().st_uid).pw_name
+    return 'sera'
+
+
 def configure_logging(debug):
     logger = logging.getLogger('sera')
     if debug:
@@ -36,7 +43,7 @@ def configure_path():
     """
     sera_path = Path.home() / '.sera'
     sera_path_exists = sera_path.exists()
-    current_user = getpwuid(getuid())[0]
+    current_user = getpwuid(getuid()).pw_name
     # root account always uses /etc/sera for config instead of /root
     if not Path.home().exists() or Path.home() == Path('/root'):  # system or root account
         sera_path = Path('/etc') / 'sera'
