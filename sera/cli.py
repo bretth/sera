@@ -61,11 +61,9 @@ def main(ctx, timeout, debug, verbosity, watcher, local):
             click.echo('No env file. Using provider credentials (if defined)')
 
     if not getenv('SERA_CLIENT_PRIVATE_KEY') and ctx.invoked_subcommand != 'keygen':
-        if verbosity:
-            click.echo('Generating encryption keypair')
-        public_key = _keygen(env_path)[0]
-    else:
-        public_key = getenv('SERA_CLIENT_PUBLIC_KEY')
+        raise click.ClickException(
+            "No env SERA_CLIENT_PRIVATE_KEY. "
+            "Maybe run `sera keygen` first.")
 
     if verbosity > 1 and getenv('SERA_REGION'):
         click.echo('Using region %s' % getenv('SERA_REGION'))
