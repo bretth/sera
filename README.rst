@@ -54,11 +54,11 @@ Goals
 Installation
 -------------
 
-On the client:
+On the client::
 
     pip install git+https://github.com/bretth/sera#egg=sera
 
-On an Ubuntu 16.04 server:
+On an Ubuntu 16.04 server::
 
     sudo apt install build-essential
     sudo apt install python3-pip
