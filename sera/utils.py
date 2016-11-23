@@ -2,8 +2,9 @@ from base64 import urlsafe_b64encode
 from collections import OrderedDict
 from os import getenv, getuid
 import logging
-from pwd import getpwuid
+from pwd import getpwuid, getpwnam
 from pathlib import Path
+from shutil import chown
 
 
 from dotenv.main import set_key, parse_dotenv
@@ -20,7 +21,7 @@ def get_default_user():
     home = Path.home()
     if home.exists():
         return getpwuid(home.stat().st_uid).pw_name
-    return 'sera'
+    return 'root'
 
 
 def configure_logging(debug):
@@ -51,6 +52,8 @@ def configure_path():
             sera_path.mkdir()
     elif not sera_path_exists:
         sera_path.mkdir()
+        if current_user != get_default_user():
+            chown(str(sera_path), user=get_default_user())
     return sera_path
 
 
@@ -96,6 +99,9 @@ def get_watcher_key(path, name):
 def set_env_key(path, key, value):
     if not path.exists():
         path.touch(mode=0o644)
+        default_user = get_default_user()
+        if Path('/etc', 'sera', 'env') != path and getpwuid(getuid()).pw_name != default_user:
+            chown(str(path), user=default_user)
     return set_key(str(path), key, value, quote_mode="auto")[0]
 
 
@@ -103,6 +109,9 @@ def keygen(path, write=True):
     if write:
         if not path.exists():
             path.touch(mode=0o700)
+            default_user = get_default_user()
+            if Path('/etc', 'sera', 'env') != path and getpwuid(getuid()).pw_name != default_user:
+                chown(str(path), user=default_user)
 
     private_key = PrivateKey.generate()
     public_key = private_key.public_key
