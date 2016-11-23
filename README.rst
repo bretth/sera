@@ -87,11 +87,6 @@ sudo systemctl start sera
 
 Security notes
 --------------
-The main known weaknesses are:
-
-- Sera is intended to run as root user so a compromised client can issue any command to the watcher.
-
-The main security features are:
 
 - The nacl public encryption private keys are never transmitted
 - all messages between the client and watcher are encrypted after the initial public key exchange
