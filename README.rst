@@ -28,7 +28,7 @@ For security, rather than listen for commands, the Sera 'watcher' polls the tran
 
 Currently the only useful command is the Sera *allow* command which will temporarily enable ufw to allow traffic from your current public ip address, but it is intended that Sera leverage saltstack for much more powerful configuration and orchestration either to control a master or to control masterless minions.
 
-Essentially Sera layers a limited api over your server that can't be targeted by direct attacks, and means you won't need ssh or a vpn to access a server. Conceptually it is similar to salt but uses AWS SQS as transport instead of ZeroMQ. This means you can leverage the scaling and security of the battle AWS SQS at low cost.
+Essentially Sera layers a limited api over your server that can't be targeted by direct attacks, and means you won't need ssh or a vpn to access a server. Conceptually it is similar to salt but uses AWS SQS as transport instead of ZeroMQ. This means you can leverage the scaling and security of the battle tested AWS SQS at low cost.
 
 Features
 ---------
@@ -56,34 +56,33 @@ Installation
 
 On the client:
 
-pip install git+https://github.com/bretth/sera#egg=sera
+    pip install git+https://github.com/bretth/sera#egg=sera
 
 On an Ubuntu 16.04 server:
 
-sudo apt install build-essential
-sudo apt install python3-pip
-sudo apt install libffi-dev
-sudo pip3 install git+https://github.com/bretth/sera#egg=sera
-sudo sera install service
+    sudo apt install build-essential
+    sudo apt install python3-pip
+    sudo apt install libffi-dev
+    sudo pip3 install git+https://github.com/bretth/sera#egg=sera
+    sudo sera install service
 
 Usage
 --------------
 
 On the client:
 
-sera keygen
-sera create_provider_keys
-sera install region [your aws region]
+    sera keygen
+    sera create_provider_keys
+    sera install region [your aws region]
 
 On the server:
 
-sera keygen
-sera install client_key [the public key from client keygen]
-sera install access_key [aws provider access key]
-sera install secret_key [aws provider secret key]
-sera install region [your aws region]
-sudo systemctl start sera
-
+    sera keygen
+    sera install client_key [the public key from client keygen]
+    sera install access_key [aws provider access key]
+    sera install secret_key [aws provider secret key]
+    sera install region [your aws region]
+    sudo systemctl start sera
 
 Security notes
 --------------
