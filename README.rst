@@ -54,7 +54,7 @@ Goals
 Installation
 -------------
 
-On the client::
+On a macOS client::
 
     pip install git+https://github.com/bretth/sera#egg=sera
 
