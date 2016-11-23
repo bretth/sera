@@ -60,32 +60,29 @@ pip install git+https://github.com/bretth/sera#egg=sera
 
 On an Ubuntu 16.04 server:
 
-apt install build-essential
-apt install python3-pip
-apt install libffi-dev
-pip3 install git+https://github.com/bretth/sera#egg=sera
-useradd -r sera
+sudo apt install build-essential
+sudo apt install python3-pip
+sudo apt install libffi-dev
+sudo pip3 install git+https://github.com/bretth/sera#egg=sera
+sudo sera install service
 
 Usage
 --------------
 
 On the client:
 
-$ sera keygen
-Loading /Users/bretth/.env
-Using region ap-southeast-2
-SERA_CLIENT_PUBLIC_KEY: LvjGIMnOFcU3RMr35csrXcrBKajTZB7ccgiYFMcQ7h0=
-SERA_CLIENT_PRIVATE_KEY: *******************************************=
-Written to /Users/bretth/.env
+sera keygen
+sera create_provider_keys
+sera install region [your aws region]
 
-On the server as sudo user:
+On the server:
 
 sera keygen
-sera install service
-sera install client_key LvjGIMnOFcU3RMr35csrXcrBKajTZB7ccgiYFMcQ7h0=
-sera install access_key AKIBI5NUKWPSTL4IAOYQ
-sera install secret_key zx2Zh96uvKRDE5vM4HxuvOoawsKgWCTcaXWUUXjo
-sera install region ap-southeast-2
+sera install client_key [the public key from client keygen]
+sera install access_key [aws provider access key]
+sera install secret_key [aws provider secret key]
+sera install region [your aws region]
+sudo systemctl start sera
 
 
 Security notes
