@@ -15,8 +15,9 @@ Description=Sera remote
 After=network.target
 
 [Service]
-ExecStart="${executable} watch"
+ExecStart=${executable} watch
 Type=simple
+User=${user}
 
 [Install]
 WantedBy=multi-user.target

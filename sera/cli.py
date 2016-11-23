@@ -255,12 +255,15 @@ def install(ctx):
 @install.command()
 @click.pass_context
 @click.option('--path', '-p', help="Path to installed file")
-def service(ctx, path):
+@click.option('--user', '-u', default="sera", help="User to run as")
+def service(ctx, path, user):
     """Install systemd service"""
     path = path or '/etc/systemd/system/sera.service'
     if ctx.obj['verbosity']:
         click.echo('Installing service at %s' % path)
-    output = service_template.substitute(executable=shutil.which('sera'))
+    output = service_template.substitute(
+        executable=shutil.which('sera'),
+        user=user)
     with open(path, 'w') as file:
         file.write(output)
 
