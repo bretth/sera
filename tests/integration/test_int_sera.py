@@ -28,7 +28,7 @@ class TestHost(object):
 
     def test_send_cmd_with_response(self, host):
         cmd = 'echo'
-        pkey = getenv('SERA_PUBLIC_KEY')
+        pkey = getenv('SERA_CLIENT_PUBLIC_KEY')
         # send to myself
         resp = host.send(host.name, cmd, {}, pkey)
         assert cmd == resp.name

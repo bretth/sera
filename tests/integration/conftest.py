@@ -91,9 +91,9 @@ def host_with_cmd():
     Host with a command on the queue
     """
     host = Host.get(a_name(), create=True)
-    pkey = getenv('SERA_PUBLIC_KEY')
+    pkey = getenv('SERA_CLIENT_PUBLIC_KEY')
     cmd = {'name': 'echo'}
-    encrypted = encrypt(json.dumps(cmd), pkey, getenv('SERA_PRIVATE_KEY'))
+    encrypted = encrypt(json.dumps(cmd), pkey, getenv('SERA_CLIENT_PRIVATE_KEY'))
     sqs().send_message(
         QueueUrl=host.url,
         MessageBody=json.dumps('decrypt %s' % pkey),

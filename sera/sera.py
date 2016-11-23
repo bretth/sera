@@ -115,7 +115,7 @@ class Host(BaseEndpoint):
         return
 
     def exchange_keys(self, name, timeout=DEFAULT_TIMEOUT):
-        cmd = 'public_key %s' % getenv('SERA_PUBLIC_KEY', '')
+        cmd = 'public_key %s' % getenv('SERA_CLIENT_PUBLIC_KEY', '')
         remote = self.send(name, cmd)
         watcher_key = None
         if remote and remote.name.startswith('public_key'):
@@ -138,9 +138,9 @@ class Host(BaseEndpoint):
             kwargs = {
                 'params': params, 'name': cmd,
                 'stdout': stdout, 'stderr': stderr, 'returncode': returncode}
-            encrypted = encrypt(json.dumps(kwargs), recipient_key, getenv('SERA_PRIVATE_KEY'))
+            encrypted = encrypt(json.dumps(kwargs), recipient_key, getenv('SERA_CLIENT_PRIVATE_KEY'))
             payload = {'Encrypted': encrypted}
-            cmd = 'decrypt %s' % getenv('SERA_PUBLIC_KEY')
+            cmd = 'decrypt %s' % getenv('SERA_CLIENT_PUBLIC_KEY')
         logger.debug('Host.client.send_message(%s, %s, ...)' % (name, str(cmd)))
         self.client.send_message(name, json.dumps(cmd), payload)
         if await_response:
@@ -172,7 +172,7 @@ class Host(BaseEndpoint):
         if body == 'decrypt':
             try:
                 kwargs = json.loads(
-                    decrypt(msg.encrypted, senders_key, getenv('SERA_PRIVATE_KEY')))
+                    decrypt(msg.encrypted, senders_key, getenv('SERA_CLIENT_PRIVATE_KEY')))
             # if the message is unencrypted it will raise a ValueError trying to extract a NONCE
             except (ValueError, CryptoError) as err:
                 logger.warning('Failed to decrypt msg')

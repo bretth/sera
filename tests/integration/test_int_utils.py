@@ -12,9 +12,9 @@ PUBLIC_KEY2 = 'enLttA6OYJ1ctH3cDRi21uLwTXWRLC_jhY_e952lt3E='
 
 def test_keygen():
     keygen('.testenv', write=True)
-    private_key = get_key('.testenv', 'SERA_PRIVATE_KEY')
+    private_key = get_key('.testenv', 'SERA_CLIENT_PRIVATE_KEY')
     print(private_key)
-    public_key = get_key('.testenv', 'SERA_PUBLIC_KEY')
+    public_key = get_key('.testenv', 'SERA_CLIENT_PUBLIC_KEY')
     print(public_key)
 
 
