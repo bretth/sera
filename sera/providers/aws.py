@@ -92,7 +92,7 @@ class AWSProvider(object):
             aws_access_key_id=access_key or os.getenv('SERA_ACCESS_KEY'),
             aws_secret_access_key=secret_access_key or os.getenv('SERA_SECRET_KEY'))
         if namespace is None:  # allow '' to be set as a valid namespace
-            namespace = os.getenv('SERA_NAMESPACE', 'Sera')
+            namespace = os.getenv('SERA_NAMESPACE', 'sera')
         kwargs.setdefault('namespace', namespace)
         kwargs.setdefault('ReceiveMessageWaitTimeSeconds', ReceiveMessageWaitTimeSeconds)
         kwargs.setdefault('MessageRetentionPeriod', MessageRetentionPeriod)

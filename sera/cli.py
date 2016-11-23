@@ -67,8 +67,8 @@ def main(ctx, timeout, debug, verbosity, watcher, local):
 
     if verbosity > 1 and getenv('SERA_REGION'):
         click.echo('Using region %s' % getenv('SERA_REGION'))
-    namespace = getenv('SERA_NAMESPACE', 'Sera')
-    if verbosity > 1 and namespace != 'Sera':
+    namespace = getenv('SERA_NAMESPACE', 'sera')
+    if verbosity > 1 and namespace != 'sera':
         click.echo('Using namespace "%s"' % namespace)
     if ctx.invoked_subcommand in ['create_provider_keys', 'install', 'keygen', 'watch'] or local:
         return
