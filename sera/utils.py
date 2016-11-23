@@ -2,7 +2,7 @@ from base64 import urlsafe_b64encode
 from collections import OrderedDict
 from os import getenv, getuid
 import logging
-from pwd import getpwuid, getpwnam
+from pwd import getpwuid
 from pathlib import Path
 from shutil import chown
 
