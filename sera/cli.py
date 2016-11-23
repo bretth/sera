@@ -56,7 +56,7 @@ def main(ctx, timeout, debug, verbosity, watcher, local):
         'known_clients': sera_path / 'known_clients',
         'known_watchers': sera_path / 'known_watchers',
         'env_path': env_path}
-    if not env_path_exists:
+    if not env_path_exists and ctx.invoked_subcommand != 'keygen':
         if verbosity:
             click.echo('No env file. Using provider credentials (if defined)')
 
@@ -269,7 +269,7 @@ def service(ctx, path, user):
 @install.command()
 @click.pass_context
 @click.argument('client_key')
-def client_key(ctx, client_key):
+def client(ctx, client_key):
     """Install client_key in known_clients"""
     clients = get_allowed_clients(ctx.obj['known_clients'])
     if client_key not in clients:
@@ -280,7 +280,7 @@ def client_key(ctx, client_key):
 @install.command()
 @click.pass_context
 @click.argument('access_key')
-def access_key(ctx, access_key):
+def access(ctx, access_key):
     """Install provider SERA_ACCESS_KEY in env"""
     set_env_key(ctx.obj['env_path'], 'SERA_ACCESS_KEY', access_key)
 
@@ -288,7 +288,7 @@ def access_key(ctx, access_key):
 @install.command()
 @click.pass_context
 @click.argument('secret_key')
-def secret_key(ctx, secret_key):
+def secret(ctx, secret_key):
     """Install provider SERA_SECRET_KEY in env"""
     set_env_key(ctx.obj['env_path'], 'SERA_SECRET_KEY', secret_key)
 
