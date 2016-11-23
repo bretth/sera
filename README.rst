@@ -69,13 +69,13 @@ On an Ubuntu 16.04 server::
 Usage
 --------------
 
-On the client:
+On the client::
 
     sera keygen
     sera create_provider_keys
     sera install region [your aws region]
 
-On the server:
+On the server::
 
     sera keygen
     sera install client_key [the public key from client keygen]
