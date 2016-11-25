@@ -110,7 +110,7 @@ Start the service::
 Security notes
 --------------
 
-- The nacl public encryption private keys are never transmitted
+- The nacl encryption private keys are never transmitted
 - all messages between the client and watcher are encrypted after the initial public key exchange
 - watchers can only receive commands from known clients
 - the boto3 library uses verified ssl encryption over the top of the nacl encryption
