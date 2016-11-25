@@ -68,7 +68,7 @@ Install sera itself::
     sudo apt install python3-pip
     sudo pip3 install git+https://github.com/bretth/sera#egg=sera
     
-Install a systemd sera.service file::
+Install a systemd sera.service file at /etc/systemd/service::
 
     sudo sera install service
 
