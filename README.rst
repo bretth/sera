@@ -58,21 +58,33 @@ On a macOS client::
 
     pip install git+https://github.com/bretth/sera#egg=sera
 
-On an Ubuntu 16.04 server::
+On an Ubuntu 16.04 server the pynacl lib needs building::
 
     sudo apt install build-essential
-    sudo apt install python3-pip
     sudo apt install libffi-dev
+
+Install sera itself:: 
+
+    sudo apt install python3-pip
     sudo pip3 install git+https://github.com/bretth/sera#egg=sera
+    
+Install a systemd sera.service file::
+
     sudo sera install service
 
 Usage
 --------------
 
-On the client::
+On the client create an encryption keypair::
 
     sera keygen
+    
+Create an aws api key pair with restricted access to SQS::
+
     sera create_provider_keys
+
+Install setting in ~/.sera/env file (or /etc/sera/env)::
+
     sera install region [your aws region]
 
 On the server::
