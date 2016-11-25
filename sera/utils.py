@@ -19,7 +19,8 @@ ALLOWED_CLIENTS = []
 
 def get_default_user():
     home = Path.home()
-    if home.exists():
+    current_user = getpwuid(getuid()).pw_name
+    if current_user != 'root' and home.exists():
         return getpwuid(home.stat().st_uid).pw_name
     return 'root'
 
