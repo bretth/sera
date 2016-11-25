@@ -75,25 +75,30 @@ Install a systemd sera.service file at /etc/systemd/service::
 Usage
 --------------
 
-On the client create an encryption keypair::
+On the client create an encryption keypair and install to ~/.sera/env::
 
     sera keygen
     
-Create an aws api key pair with restricted access to SQS::
+Get an AWS api access, secret keypair with permission to create policy, iam users, and groups then install into the env::
+    
+    sera install access
+    sera install secret
+
+Install your aws region in the env file::
+
+    sera install region [your aws region]
+
+Let sera create an AWS api access and secret keypair with restricted access to SQS::
 
     sera create_provider_keys
 
-Install setting in ~/.sera/env file (or /etc/sera/env)::
+On the server install env settings in /etc/sera/env and start the service::
 
-    sera install region [your aws region]
-
-On the server::
-
-    sera keygen
-    sera install client_key [the public key from client keygen]
-    sera install access_key [aws provider access key]
-    sera install secret_key [aws provider secret key]
-    sera install region [your aws region]
+    sudo sera keygen
+    sudo sera install client_key [the public key from client keygen]
+    sudo sera install access_key [aws provider access key]
+    sudo sera install secret_key [aws provider secret key]
+    sudo sera install region [your aws region]
     sudo systemctl start sera
 
 Security notes
