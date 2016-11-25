@@ -253,7 +253,6 @@ def install(ctx):
 @install.command()
 @click.pass_context
 @click.option('--path', '-p', help="Path to installed file")
-@click.option('--user', '-u', default=get_default_user, help="User to run as")
 def service(ctx, path, user):
     """Install systemd service"""
     path = path or '/etc/systemd/system/sera.service'
@@ -261,7 +260,7 @@ def service(ctx, path, user):
         click.echo('Installing service at %s' % path)
     output = service_template.substitute(
         executable=shutil.which('sera'),
-        user=user)
+        user='root')  # todo allow sudo
     with open(path, 'w') as file:
         file.write(output)
 

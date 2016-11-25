@@ -61,7 +61,10 @@ def get_client():
 
 
 def run(cmd, args=None):
-    cmd = [cmd]
+    """
+    Run command as sudo user (to log command)
+    """
+    cmd = ['sudo', '-n', cmd]  # avoid prompting for sudo password
     if args:
         cmd += list(args)
     return _run(
