@@ -95,13 +95,13 @@ Let sera create an AWS api access and secret keypair with restricted access to S
 On the server install env settings in /etc/sera/env::
 
     sudo sera keygen
-    sudo sera install access_key [aws provider access key]
-    sudo sera install secret_key [aws provider secret key]
+    sudo sera install access [aws provider access key]
+    sudo sera install secret [aws provider secret key]
     sudo sera install region [your aws region]
 
 To allow clients to access their public keys need to be added to /etc/sera/known_clients::
 
-    sudo sera install client_key [the public key from client keygen]
+    sudo sera install client [the public key from client keygen]
     
 Start the service::
 
