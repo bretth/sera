@@ -253,7 +253,7 @@ def install(ctx):
 @install.command()
 @click.pass_context
 @click.option('--path', '-p', help="Path to installed file")
-def service(ctx, path, user):
+def service(ctx, path):
     """Install systemd service"""
     path = path or '/etc/systemd/system/sera.service'
     if ctx.obj['verbosity']:
