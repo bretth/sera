@@ -43,18 +43,18 @@ def configure_path():
     ~/.sera (preferred)
 
     """
-    sera_path = Path.home() / '.sera'
-    sera_path_exists = sera_path.exists()
     current_user = getpwuid(getuid()).pw_name
-    # root account always uses /etc/sera for config instead of /root
-    if not Path.home().exists() or Path.home() == Path('/root'):  # system or root account
-        sera_path = Path('/etc') / 'sera'
-        if not sera_path.exists() and current_user == 'root':
+    home = Path.home()
+
+    if current_user == 'root' or home.exists() is False:  # sudo, root or system user
+        sera_path = Path('/etc', 'sera')
+    else:
+        sera_path = home / '.sera'
+
+    if not sera_path.exists():
+        if current_user == 'root' or sera_path == home / '.sera':
             sera_path.mkdir()
-    elif not sera_path_exists:
-        sera_path.mkdir()
-        if current_user != get_default_user():
-            chown(str(sera_path), user=get_default_user())
+
     return sera_path
 
 
