@@ -7,7 +7,7 @@ LOWER_CMD = ''
 TIMEOUT = 20
 
 # time to re-lift
-RESET_TIME = 120
+RESET_TIME = 60
 
 service_template = Template("""
 [Unit]

@@ -215,6 +215,7 @@ class AWSProvider(object):
                 body=msg['Body'],
                 sender=msg['MessageAttributes'].get('Sender', {}).get('StringValue', ''),
                 encrypted=msg['MessageAttributes'].get('Encrypted', {}).get('BinaryValue', ''))
+            MSG_CACHE['MessageId'] = None
             return message
         return
 
