@@ -60,12 +60,10 @@ On a macOS client::
 
 On an Ubuntu 16.04 server the pynacl lib needs building::
 
-    sudo apt install build-essential
-    sudo apt install libffi-dev
+    sudo apt install build-essential libffi-dev python3-dev python3-setuptools python3-pip
 
 Install sera itself:: 
 
-    sudo apt install python3-pip
     sudo pip3 install git+https://github.com/bretth/sera#egg=sera
     
 Install a systemd sera.service file at /etc/systemd/service::
