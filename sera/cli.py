@@ -151,7 +151,7 @@ def allow(ctx, from_ip):
         if not out.returncode:
             out.subcommand = disallow
             out.params = (RESET_TIME, from_ip)
-            out.stdout += bytes('Resetting firewall in %s seconds' % str(RESET_TIME), 'utf-8')
+            out.stdout += 'Resetting firewall in %s seconds' % str(RESET_TIME)
     else:
         out = remote('allow', ctx)
         mprint(ctx, out)
