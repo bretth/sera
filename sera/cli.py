@@ -9,7 +9,7 @@ import click
 import requests
 
 from .sera import get_client, Host, run, remote
-from .settings import service_template
+from .settings import service_template, RESET_TIME
 from .utils import keygen as _keygen
 from .utils import (
     get_watcher_key, set_env_key, get_default_user,
@@ -113,29 +113,6 @@ def echo(ctx, args):
 
 @main.command()
 @click.pass_context
-@click.argument('from_ip', required=False)
-def allow(ctx, from_ip):
-    """Open firewall connection from ip address"""
-
-    verbosity = ctx.obj.get('verbosity')
-    if not from_ip:
-        ctx.params['from_ip'] = from_ip = requests.get(
-            'http://ipinfo.io').json().get('ip')
-    if not verbosity:
-        click.echo('allow from_ip %s' % from_ip)
-    args = ['allow', 'from', from_ip]
-    if ctx.obj['local']:
-        out = run('ufw', args)
-    else:
-        out = remote('allow', ctx)
-        mprint(ctx, out)
-        if click.confirm('Enter to disallow', default=True):
-            return ctx.invoke(disallow)
-    return mprint(ctx, out)
-
-
-@main.command()
-@click.pass_context
 @click.option('--delay', '-d', type=int, default=0)
 @click.argument('from_ip', required=False)
 def disallow(ctx, delay, from_ip):
@@ -153,6 +130,32 @@ def disallow(ctx, delay, from_ip):
         out = run('ufw', args)
     else:
         out = remote('disallow', ctx)
+    return mprint(ctx, out)
+
+
+@main.command()
+@click.pass_context
+@click.argument('from_ip', required=False)
+def allow(ctx, from_ip):
+    """Open firewall connection from ip address"""
+
+    verbosity = ctx.obj.get('verbosity')
+    if not from_ip:
+        ctx.params['from_ip'] = from_ip = requests.get(
+            'http://ipinfo.io').json().get('ip')
+    if not verbosity:
+        click.echo('allow from_ip %s' % from_ip)
+    args = ['allow', 'from', from_ip]
+    if ctx.obj['local']:
+        out = run('ufw', args)
+        if not out.returncode:
+            out.subcommand = disallow
+            out.params = (RESET_TIME, from_ip)
+            out.stdout += bytes('Resetting firewall in %s seconds' % str(RESET_TIME), 'utf-8')
+    else:
+        out = remote('allow', ctx)
+        mprint(ctx, out)
+
     return mprint(ctx, out)
 
 
@@ -229,16 +232,21 @@ def watch(ctx, client):
             if verbosity:
                 click.echo('Received cmd %s' % str(cmd.name))
             subcommand = main.get_command(ctx, cmd.name)
-            out = ctx.invoke(subcommand, **cmd.params)
-            host.send(
-                cmd.host,
-                cmd.name,
-                params=cmd.params,
-                stdout=out.stdout,
-                stderr=out.stderr,
-                returncode=out.returncode,
-                recipient_key=cmd.public_key,
-                await_response=False)
+            params = cmd.params
+            while subcommand:
+                out = ctx.invoke(subcommand, **params)
+                host.send(
+                    cmd.host,
+                    cmd.name,
+                    params=cmd.params,
+                    stdout=out.stdout,
+                    stderr=out.stderr,
+                    returncode=out.returncode,
+                    recipient_key=cmd.public_key,
+                    await_response=False)
+                subcommand = getattr(out, 'subcommand', None)
+                params = getattr(out, 'params', None)
+
         duration = time.time() - start
         if timeout > -1 and duration > timeout:
             return
