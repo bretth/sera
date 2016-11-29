@@ -150,7 +150,7 @@ def allow(ctx, from_ip):
         out = run('ufw', args)
         if not out.returncode:
             out.subcommand = disallow
-            out.params = (RESET_TIME, from_ip)
+            out.params = {'delay': RESET_TIME, 'from_ip': from_ip}
             out.stdout += 'Resetting firewall in %s seconds' % str(RESET_TIME)
     else:
         out = remote('allow', ctx)
