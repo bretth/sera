@@ -154,7 +154,7 @@ def allow(ctx, from_ip):
             ip_addr = get_ip_address(from_ip)
             out.subcommand = disallow
             out.params = {'delay': RESET_TIME, 'from_ip': from_ip}
-            out.stdout += 'Resetting firewall on %s in %s seconds' % str(ip_addr, RESET_TIME)
+            out.stdout += 'Resetting firewall on %s in %s seconds' % (ip_addr, str(RESET_TIME))
     else:
         out = remote('allow', ctx)
     return mprint(ctx, out)
