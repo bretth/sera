@@ -12,6 +12,7 @@ from .sera import get_client, Host, run, remote
 from .settings import service_template, RESET_TIME
 from .utils import keygen as _keygen
 from .utils import (
+    get_ip_address,
     get_watcher_key, set_env_key, get_default_user,
     get_allowed_clients, configure_path, loadenv, configure_logging)
 
@@ -147,11 +148,13 @@ def allow(ctx, from_ip):
         click.echo('allow from_ip %s' % from_ip)
     args = ['allow', 'from', from_ip]
     if ctx.obj['local']:
+
         out = run('ufw', args)
         if not out.returncode:
+            ip_addr = get_ip_address(from_ip)
             out.subcommand = disallow
             out.params = {'delay': RESET_TIME, 'from_ip': from_ip}
-            out.stdout += 'Resetting firewall in %s seconds' % str(RESET_TIME)
+            out.stdout += 'Resetting firewall on %s in %s seconds' % str(ip_addr, RESET_TIME)
     else:
         out = remote('allow', ctx)
         mprint(ctx, out)

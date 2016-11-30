@@ -5,6 +5,7 @@ import logging
 from pwd import getpwuid
 from pathlib import Path
 from shutil import chown
+import socket
 
 
 from dotenv.main import set_key, parse_dotenv
@@ -15,6 +16,14 @@ from nacl.encoding import URLSafeBase64Encoder
 from nacl.utils import random
 
 ALLOWED_CLIENTS = []
+
+
+def get_ip_address(target_ip):
+    soc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    soc.connect((target_ip, 22))
+    ip_addr = soc.getsockname()[0]
+    soc.close()
+    return ip_addr
 
 
 def get_default_user():
