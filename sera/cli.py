@@ -124,7 +124,7 @@ def disallow(ctx, delay, from_ip):
         ctx.params['from_ip'] = from_ip = requests.get(
             'http://ipinfo.io').json().get('ip')
     if verbosity:
-        click.echo('disallow from_ip %s' % from_ip)
+        click.echo('ufw delete allow from %s' % from_ip)
     args = ['delete', 'allow', 'from', from_ip]
     if ctx.obj['local']:
         time.sleep(delay)
@@ -145,7 +145,7 @@ def allow(ctx, from_ip):
         ctx.params['from_ip'] = from_ip = requests.get(
             'http://ipinfo.io').json().get('ip')
     if verbosity:
-        click.echo('allow from_ip %s' % from_ip)
+        click.echo('ufw allow from %s' % from_ip)
     args = ['allow', 'from', from_ip]
     if ctx.obj['local']:
 
