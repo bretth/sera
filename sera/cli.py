@@ -123,7 +123,7 @@ def disallow(ctx, delay, from_ip):
     if not from_ip:
         ctx.params['from_ip'] = from_ip = requests.get(
             'http://ipinfo.io').json().get('ip')
-    if not verbosity:
+    if verbosity:
         click.echo('disallow from_ip %s' % from_ip)
     args = ['delete', 'allow', 'from', from_ip]
     if ctx.obj['local']:
@@ -144,7 +144,7 @@ def allow(ctx, from_ip):
     if not from_ip:
         ctx.params['from_ip'] = from_ip = requests.get(
             'http://ipinfo.io').json().get('ip')
-    if not verbosity:
+    if verbosity:
         click.echo('allow from_ip %s' % from_ip)
     args = ['allow', 'from', from_ip]
     if ctx.obj['local']:
@@ -157,8 +157,6 @@ def allow(ctx, from_ip):
             out.stdout += 'Resetting firewall on %s in %s seconds' % str(ip_addr, RESET_TIME)
     else:
         out = remote('allow', ctx)
-        mprint(ctx, out)
-
     return mprint(ctx, out)
 
 
