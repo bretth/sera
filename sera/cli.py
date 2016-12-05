@@ -6,7 +6,7 @@ from .commands.main import main
 from .commands.install import install
 from .commands.addremove import add, remove
 from .commands.allow import allow, disallow
-from .commands.exit import exit
+from .commands.end import end
 from .commands.export import export
 from .commands.watch import watch
 
