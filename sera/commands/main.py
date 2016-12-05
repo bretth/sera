@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from os import getenv
+from sys import argv
 
 import click
 
@@ -9,6 +10,13 @@ from ..utils import (
     get_default_watcher,
     get_watcher_key, set_env_key,
     configure_path, loadenv, configure_logging)
+
+
+def get_default_timeout():
+    if len(argv > 1) and 'watch' in argv[1:]:
+        return -1
+    else:
+        return int(getenv('SERA_TIMEOUT', DEFAULT_TIMEOUT))
 
 
 def lprint(ctx, out):
@@ -21,7 +29,7 @@ def lprint(ctx, out):
 
 
 @click.group()
-@click.option('--timeout', '-t', type=int, default=getenv('SERA_TIMEOUT', -1000))
+@click.option('--timeout', '-t', type=int, default=get_default_timeout)
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--verbosity', '-v', type=int, default=1)
 @click.option('--watcher', '-w', default=get_default_watcher)
@@ -42,12 +50,6 @@ def main(ctx, timeout, debug, verbosity, watcher):
     sera_path = configure_path()
     env_path, env_path_exists = loadenv(sera_path)
     local = True if not watcher else False
-
-    # handle watcher timeout
-    if timeout == -1000 and watcher:
-        timeout = -1
-    elif timeout == -1000:
-        timeout = DEFAULT_TIMEOUT
 
     ctx.obj = {
         'local': local,
