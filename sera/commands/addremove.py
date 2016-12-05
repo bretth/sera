@@ -1,7 +1,8 @@
 import click
 
 from .main import main
-from ..utils import get_allowed_clients, remote
+from ..sera import remote
+from ..utils import get_allowed_clients
 
 
 @main.command()

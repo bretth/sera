@@ -4,9 +4,9 @@ import time
 
 from .main import main, lprint
 
-from ..sera import remote
+from ..sera import remote, run
 from ..settings import RESET_TIME
-from ..utils import run, get_ip_address
+from ..utils import get_ip_address
 
 
 @main.command()

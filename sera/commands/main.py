@@ -34,7 +34,6 @@ def main(ctx, timeout, debug, verbosity, watcher):
     sera -w host.name echo hello world
     sera -w host.name echo -n hello world  # pass defined args
     sera -w host.name echo -- -n hello world  # pass arbitrary args
-    sera . echo hello world  # substitute env $SERA_DEFAULT_WATCHER as target
     """
 
     # set some globals
