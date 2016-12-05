@@ -3,6 +3,7 @@ import logging
 import click
 
 from .main import main
+from .end import end
 from ..sera import remote, RemoteCommand
 from ..utils import set_env_key
 
@@ -19,7 +20,7 @@ def export(ctx, expression):
         set_env_key(ctx.obj['env_path'], variable, value)
         cp = RemoteCommand(
             returncode=0,
-            subcommand='end',
+            subcommand=end,
             params={'message': 'exported %s; exiting...' % variable})
         return cp
     else:
