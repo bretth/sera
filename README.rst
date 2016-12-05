@@ -87,30 +87,35 @@ On the client create an encryption keypair and install to ~/.sera/env::
     
 Get an AWS api access, secret keypair with permission to create policy, iam users, and groups then install into the env::
     
-    sera install access
-    sera install secret
+    sera export SERA_ACCESS_KEY=[AWS access key]
+    sera export SERA_SECRET_KEY=[AWS secret key]
 
 Install your aws region in the env file::
 
-    sera install region [your aws region]
+    sera export SERA_REGION=[your AWS region] 
 
 Let sera create an AWS api access and secret keypair with restricted access to SQS::
 
     sera create_provider_keys
 
-On the server install env settings in /etc/sera/env::
+On the server install env settings in /etc/sera/env (by using sudo)::
 
     sudo sera keygen
-    sudo sera install access [aws provider access key]
-    sudo sera install secret [aws provider secret key]
-    sudo sera install region [your aws region]
-
-To allow clients to access their public keys need to be added to /etc/sera/known_clients::
-
-    sudo sera install client [the public key from client keygen]
+    sudo sera export SERA_ACCESS_KEY=[AWS access key]
+    sudo sera export SERA_SECRET_KEY=[AWS secret key]
     
-Start the service::
+Get your AWS region code from http://docs.aws.amazon.com/general/latest/gr/rande.html ::
 
+    sudo sera export SERA_REGION=[your AWS region] 
+
+To allow client access their public keys need to be added to /etc/sera/known_clients::
+
+    sudo sera add [the public key from client keygen]
+    
+Enable & start the service::
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable sera
     sudo systemctl start sera
 
 Security notes
