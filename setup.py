@@ -32,7 +32,8 @@ setup(
     url='https://github.com/bretth/sera',
     packages=[
         'sera',
-        'sera.providers'
+        'sera.providers',
+        'sera.commands'
     ],
     package_dir={'sera':
                  'sera'},
