@@ -1,11 +1,9 @@
 import logging
-from collections import namedtuple
 
 import click
 
 from .main import main
-
-from ..sera import remote
+from ..sera import remote, RemoteCommand
 from ..utils import set_env_key
 
 logger = logging.getLogger(__name__)
@@ -19,7 +17,10 @@ def export(ctx, expression):
     if ctx.obj['local']:
         variable, value = expression.split('=')
         set_env_key(ctx.obj['env_path'], variable, value)
-        cmd = namedtuple('cmd', ['subcommand', 'params'])
-        return cmd('exit', {'message': 'export %s; exiting.' % variable})
+        cp = RemoteCommand(
+            returncode=0,
+            subcommand='end',
+            params={'message': 'exported %s; exiting...' % variable})
+        return cp
     else:
         remote('export', ctx)

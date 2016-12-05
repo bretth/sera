@@ -26,6 +26,7 @@ class RemoteCommand(CompletedProcess):
         self.__dict__['public_key'] = kwargs.pop('public_key', None)
         self.__dict__['name'] = kwargs.pop('name', None)
         self.__dict__['params'] = kwargs.pop('params', None)
+        self.__dict__['subcommand'] = kwargs.pop('subcommand', None)
         kwargs.setdefault('returncode', None)
         kwargs.setdefault('args', ())
         super().__init__(**kwargs)
@@ -37,6 +38,10 @@ class RemoteCommand(CompletedProcess):
     @property
     def params(self):
         return self.__dict__.get('params', {})
+
+    @property
+    def subcommand(self):
+        return self.__dict__.get('subcommand', None)
 
     @property
     def host(self):
