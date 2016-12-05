@@ -8,6 +8,7 @@ from .commands.addremove import add, remove
 from .commands.allow import allow, disallow
 from .commands.exit import exit
 from .commands.export import export
+from .commands.watch import watch
 
 from .sera import get_client
 from .utils import keygen as _keygen
