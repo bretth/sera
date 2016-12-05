@@ -3,6 +3,8 @@ import click
 
 
 from .commands.main import main
+
+from .commands.echo import echo
 from .commands.install import install
 from .commands.addremove import add, remove
 from .commands.allow import allow, disallow
