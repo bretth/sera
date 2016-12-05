@@ -11,6 +11,7 @@ from .commands.allow import allow, disallow
 from .commands.end import end
 from .commands.export import export
 from .commands.watch import watch
+from .commands.symlink import symlink
 
 from .sera import get_client
 from .utils import keygen as _keygen
