@@ -216,6 +216,7 @@ def watch(ctx, client):
         if delay < max_delay:
             delay += 1
 
+    # host queue created - await a command
     start = time.time()
     while True:
         cmd = host.receive(timeout=timeout)
@@ -234,7 +235,7 @@ def watch(ctx, client):
                 click.echo('Received cmd %s' % str(cmd.name))
             subcommand = main.get_command(ctx, cmd.name)
             params = cmd.params
-            while subcommand:
+            while subcommand:  # can chain commands
                 out = ctx.invoke(subcommand, **params)
                 host.send(
                     cmd.host,
