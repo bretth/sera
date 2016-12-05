@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @click.pass_context
 @click.argument('expression')
 def export(ctx, expression):
-    """export VARIABLE=VALUE"""
+    """export VARIABLE=VALUE to env"""
     if ctx.obj['local']:
         variable, value = expression.split('=')
         set_env_key(ctx.obj['env_path'], variable, value)

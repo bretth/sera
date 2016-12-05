@@ -10,7 +10,7 @@ from ..settings import service_template
 @click.pass_context
 @click.option('--path', '-p', help="Path to installed file")
 def install(ctx, path):
-    """Install systemd service"""
+    """Locally install systemd service"""
     if ctx.parent.params['watcher']:
         click.echo("This command runs locally")
         raise click.Abort
@@ -19,6 +19,6 @@ def install(ctx, path):
         click.echo('Installing service at %s' % path)
     output = service_template.substitute(
         executable=shutil.which('sera'),
-        user='root')  # todo allow sudo
+        user='root')
     with open(path, 'w') as file:
         file.write(output)

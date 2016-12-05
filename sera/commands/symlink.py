@@ -11,7 +11,7 @@ from .main import main, lprint
 @click.pass_context
 @click.argument('watcher')
 def symlink(ctx, watcher):
-    """Install a symlink to sera"""
+    """Locally install a symlink to sera"""
     if ctx.parent.params['watcher']:
         click.echo("This command runs locally")
         raise click.Abort
