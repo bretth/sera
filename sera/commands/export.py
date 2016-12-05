@@ -19,6 +19,6 @@ def export(ctx, expression):
         variable, value = expression.split('=')
         set_env_key(ctx.obj['env_path'], variable, value)
         cmd = namedtuple('cmd', ['subcommand', 'params'])
-        return cmd('exit', {'message': 'set %s; exiting.' % variable})
+        return cmd('exit', {'message': 'export %s; exiting.' % variable})
     else:
-        remote('set', ctx)
+        remote('export', ctx)
