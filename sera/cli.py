@@ -12,7 +12,7 @@ from .sera import get_client, Host, run, remote
 from .settings import service_template, RESET_TIME
 from .utils import keygen as _keygen
 from .utils import (
-    get_ip_address,
+    get_ip_address, get_default_watcher,
     get_watcher_key, set_env_key, get_default_user,
     get_allowed_clients, configure_path, loadenv, configure_logging)
 
@@ -30,7 +30,7 @@ def mprint(ctx, out):
 @click.option('--timeout', '-t', type=int, default=-1)
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--verbosity', '-v', type=int, default=1)
-@click.option('--watcher', '-w')
+@click.option('--watcher', '-w', default=get_default_watcher)
 @click.option('--local', '-l', is_flag=True)
 @click.pass_context
 def main(ctx, timeout, debug, verbosity, watcher, local):

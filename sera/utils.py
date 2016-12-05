@@ -6,6 +6,7 @@ from pwd import getpwuid
 from pathlib import Path
 from shutil import chown
 import socket
+import sys
 
 
 from dotenv.main import set_key, parse_dotenv
@@ -16,6 +17,13 @@ from nacl.encoding import URLSafeBase64Encoder
 from nacl.utils import random
 
 ALLOWED_CLIENTS = []
+
+
+def get_default_watcher():
+    watcher = Path(sys.argv[0]).name
+    if watcher != 'sera':
+        return watcher
+    return ''
 
 
 def get_ip_address(target_ip):
