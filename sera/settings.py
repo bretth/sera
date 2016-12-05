@@ -18,6 +18,7 @@ After=network.target
 ExecStart=${executable} watch
 Type=simple
 User=${user}
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
