@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 @main.command()
 @click.pass_context
+@click.argument('expression')
 def export(ctx, expression):
     """export VARIABLE=VALUE"""
     if ctx.obj['local']:
