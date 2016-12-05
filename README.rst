@@ -18,7 +18,7 @@ Sera
      :alt: Updates
 
 
-The only secure port is a closed one. Execute click commands on a remote server without requiring a vpn, open inbound ports, or port knocking. This is pre-release software, python3 and currently useful for Ubuntu based servers only.
+The only secure port is a closed one. Execute click commands on a remote server without requiring a vpn, open inbound ports, or port knocking. This is pre-release software, python >= 3.5 and currently useful for Ubuntu based servers only.
 
 Introduction
 -------------
@@ -54,7 +54,7 @@ Goals
 Installation
 -------------
 
-On a macOS client::
+On a macOS client within a python >= 3.5 virtual env::
 
     pip install git+https://github.com/bretth/sera#egg=sera
 
