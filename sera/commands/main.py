@@ -21,7 +21,7 @@ def lprint(ctx, out):
 
 
 @click.group()
-@click.option('--timeout', '-t', default=getenv('SERA_TIMEOUT', 'default'))
+@click.option('--timeout', '-t', type=int, default=getenv('SERA_TIMEOUT', -1000))
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--verbosity', '-v', type=int, default=1)
 @click.option('--watcher', '-w', default=get_default_watcher)
@@ -42,15 +42,13 @@ def main(ctx, timeout, debug, verbosity, watcher):
     sera_path = configure_path()
     env_path, env_path_exists = loadenv(sera_path)
     local = True if not watcher else False
-    if timeout == 'default' and watcher:
+
+    # handle watcher timeout
+    if timeout == -1000 and watcher:
         timeout = -1
-    elif timeout == 'default':
+    elif timeout == -1000:
         timeout = DEFAULT_TIMEOUT
-    else:
-        try:
-            timeout = int(timeout)
-        else:
-            click.BadParameter("timeout must be an integer", ctx)
+
     ctx.obj = {
         'local': local,
         'timeout': timeout,
