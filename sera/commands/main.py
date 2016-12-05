@@ -13,7 +13,7 @@ from ..utils import (
 
 
 def get_default_timeout():
-    if len(argv > 1) and 'watch' in argv[1:]:
+    if len(argv) > 1 and 'watch' in argv[1:]:
         return -1
     else:
         return int(getenv('SERA_TIMEOUT', DEFAULT_TIMEOUT))
