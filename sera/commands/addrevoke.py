@@ -21,7 +21,7 @@ def add(ctx, client_key):
 
 @main.command()
 @click.pass_context
-def remove(ctx, client_key):
+def revoke(ctx, client_key):
     """remove client_key from known_clients"""
     if ctx.obj['local']:
         clients = get_allowed_clients(ctx.obj['known_clients'])
@@ -30,4 +30,4 @@ def remove(ctx, client_key):
                 if client_key != existing_client_key:
                     file.writelines([client_key])
     else:
-        remote('remove', ctx)
+        remote('revoke', ctx)

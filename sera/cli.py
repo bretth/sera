@@ -6,7 +6,7 @@ from .commands.main import main
 
 from .commands.echo import echo
 from .commands.install import install
-from .commands.addremove import add, remove
+from .commands.addremove import add, revoke
 from .commands.allow import allow, disallow
 from .commands.end import end
 from .commands.export import export
