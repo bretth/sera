@@ -15,3 +15,4 @@ from .commands.export import export
 from .commands.watch import watch
 from .commands.symlink import symlink
 from .commands.create import signature, keypair, access
+from .commands.crypt import encrypt, decrypt
