@@ -13,7 +13,7 @@ from ..utils import get_allowed_clients
 @click.pass_context
 @click.option('--client', '-c', help="Allowed client public key")
 def watch(ctx, client):
-    """Watch for requests on current hostname or <name>"""
+    """Receive remote commands"""
     verbosity = ctx.obj.get('verbosity')
     ctx.obj['host'] = name = ctx.parent.params['watcher'] or gethostname()
     allowed_clients = get_allowed_clients(ctx.obj['known_clients'], client)
