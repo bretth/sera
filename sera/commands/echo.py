@@ -10,7 +10,7 @@ from ..sera import run, remote
 @click.pass_context
 @click.argument('args', nargs=-1, type=click.UNPROCESSED)
 def echo(ctx, args):
-    """Test connection with [WATCHER]"""
+    """Test connection with watcher"""
     if ctx.obj['local']:
         out = run('echo', args)
     else:

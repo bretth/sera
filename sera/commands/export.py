@@ -1,13 +1,9 @@
-import logging
-
 import click
 
 from .main import main
 from .end import end
 from ..sera import remote, RemoteCommand
 from ..utils import set_env_key
-
-logger = logging.getLogger(__name__)
 
 
 @main.command()

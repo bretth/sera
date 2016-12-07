@@ -9,7 +9,7 @@ from ..utils import get_allowed_clients
 @click.pass_context
 @click.argument('client_key')
 def add(ctx, client_key):
-    """add client_key to known_clients"""
+    """add client public key to known clients"""
     if ctx.obj['local']:
         clients = get_allowed_clients(ctx.obj['known_clients'])
         if client_key not in clients:
@@ -22,7 +22,7 @@ def add(ctx, client_key):
 @main.command()
 @click.pass_context
 def revoke(ctx, client_key):
-    """remove client_key from known_clients"""
+    """remove client public key from known clients"""
     if ctx.obj['local']:
         clients = get_allowed_clients(ctx.obj['known_clients'])
         with ctx.obj['known_clients'].open(mode='w') as file:

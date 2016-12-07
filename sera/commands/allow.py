@@ -14,7 +14,7 @@ from ..utils import get_ip_address
 @click.option('--delay', '-d', type=int, default=0)
 @click.argument('from_ip', required=False)
 def disallow(ctx, delay, from_ip):
-    """Delete previously allowed connection from ip address"""
+    """Delete allowed connection from ip address"""
 
     verbosity = ctx.obj.get('verbosity')
     if not from_ip:
