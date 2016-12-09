@@ -62,17 +62,17 @@ def main(ctx, timeout, debug, verbosity, watcher):
         if verbosity:
             click.echo('No env file. Using provider credentials (if defined)')
 
-    if not getenv('SERA_CLIENT_PRIVATE_KEY') and ctx.invoked_subcommand != 'keygen':
+    if not getenv('SERA_CLIENT_PRIVATE_KEY') and ctx.invoked_subcommand != 'create':
         raise click.ClickException(
             "No env SERA_CLIENT_PRIVATE_KEY. "
-            "Maybe run `sera keygen` first.")
+            "Maybe run `sera create keypair` first.")
 
     if verbosity > 1 and getenv('SERA_REGION'):
         click.echo('Using region %s' % getenv('SERA_REGION'))
     namespace = getenv('SERA_NAMESPACE', 'sera')
     if verbosity > 1 and namespace != 'sera':
         click.echo('Using namespace "%s"' % namespace)
-    if ctx.invoked_subcommand in ['create_provider_keys', 'install', 'keygen', 'watch'] or local:
+    if ctx.invoked_subcommand in ['create', 'install', 'watch'] or local:
         return
 
     # master related logic
