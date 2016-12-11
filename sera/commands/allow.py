@@ -33,8 +33,9 @@ def disallow(ctx, delay, from_ip):
 
 @main.command()
 @click.pass_context
+@click.option('--delay', '-d', type=int, default=RESET_TIME)
 @click.argument('from_ip', required=False)
-def allow(ctx, from_ip):
+def allow(ctx, delay, from_ip):
     """Open firewall connection from ip address"""
 
     verbosity = ctx.obj.get('verbosity')
@@ -49,7 +50,7 @@ def allow(ctx, from_ip):
         if not out.returncode:
             ip_addr = get_ip_address(from_ip)
             out.subcommand = disallow
-            out.params = {'delay': RESET_TIME, 'from_ip': from_ip}
+            out.params = {'delay': delay, 'from_ip': from_ip}
             out.stdout += 'Resetting firewall on %s in %s seconds' % (ip_addr, str(RESET_TIME))
     else:
         out = remote('allow', ctx)
