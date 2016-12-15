@@ -186,6 +186,7 @@ class Host(BaseEndpoint):
                 logger.warning('Failed to decrypt msg')
                 logger.warning(msg)
                 logger.warning(str(err))
+                return
 
             logger.debug(
                 'RemoteCommand(host=%s, public_key=%s, name=%s' %
