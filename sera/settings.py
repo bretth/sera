@@ -6,7 +6,7 @@ LIFT_CMD = ''
 LOWER_CMD = ''
 DEFAULT_TIMEOUT = 60
 
-# time to re-lift
+# time to re-lift in minutes
 RESET_TIME = 60
 
 service_template = Template("""

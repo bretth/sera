@@ -1,6 +1,5 @@
 import click
 import requests
-import time
 
 from .main import main, lprint
 
@@ -16,15 +15,12 @@ from ..utils import get_ip_address
 def disallow(ctx, delay, from_ip):
     """Delete allowed connection from ip address"""
 
-    verbosity = ctx.obj.get('verbosity')
     if not from_ip:
         ctx.params['from_ip'] = from_ip = requests.get(
             'http://ipinfo.io').json().get('ip')
-    if verbosity:
-        click.echo('ufw delete allow from %s' % from_ip)
-    args = ['delete', 'allow', 'from', from_ip]
     if ctx.obj['local']:
-        time.sleep(delay)
+        ufw_rule = '"delete allow from %s"' % from_ip
+        args = ['printf', ufw_rule, '|', 'at', 'now', '+', str(delay), 'minutes']
         out = run('ufw', args)
     else:
         out = remote('disallow', ctx)
@@ -38,12 +34,9 @@ def disallow(ctx, delay, from_ip):
 def allow(ctx, delay, from_ip):
     """Open firewall connection from ip address"""
 
-    verbosity = ctx.obj.get('verbosity')
     if not from_ip:
         ctx.params['from_ip'] = from_ip = requests.get(
             'http://ipinfo.io').json().get('ip')
-    if verbosity:
-        click.echo('ufw allow from %s' % from_ip)
     args = ['allow', 'from', from_ip]
     if ctx.obj['local']:
         out = run('ufw', args)
@@ -51,7 +44,7 @@ def allow(ctx, delay, from_ip):
             ip_addr = get_ip_address(from_ip)
             out.subcommand = disallow
             out.params = {'delay': delay, 'from_ip': from_ip}
-            out.stdout += 'Resetting firewall on %s in %s seconds' % (ip_addr, str(RESET_TIME))
+            out.stdout += 'Resetting firewall on %s in %s minutes' % (ip_addr, str(RESET_TIME))
     else:
         out = remote('allow', ctx)
     return lprint(ctx, out)
