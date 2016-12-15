@@ -12,7 +12,7 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'Click>=6.0',
     'boto3<=2.0',
-    'pynacl<=2.0',
+    'pynacl',
     'python-dotenv',
     'requests'
 ]
