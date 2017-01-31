@@ -39,7 +39,7 @@ setup(
                  'sera'},
     entry_points={
         'console_scripts': [
-            'sera=sera.cli:main'
+            'sera=sera.cli:cli'
         ]
     },
     include_package_data=True,
