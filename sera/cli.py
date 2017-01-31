@@ -3,8 +3,6 @@
 import pkg_resources
 
 import click
-from pprint import pprint
-
 
 from .commands.main import main
 
