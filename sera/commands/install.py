@@ -6,10 +6,15 @@ from .main import main
 from ..settings import service_template
 
 
-@main.command()
+@main.group("install")
+def install():
+    """Install a configuration or service"""
+
+
+@install.command()
 @click.pass_context
 @click.option('--path', '-p', help="Path to installed file")
-def install(ctx, path):
+def sera(ctx, path):
     """Locally install systemd service"""
     if ctx.parent.params['watcher']:
         click.echo("This command runs locally")
